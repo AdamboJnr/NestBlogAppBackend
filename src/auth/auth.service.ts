@@ -52,33 +52,36 @@ export class AuthService {
 
   }
 
-  async signin(dto: SignInDto): Promise<Auth>{
-    
+  async signin(dto: SignInDto): Promise<object>{
     try {
-      // get the user
-      const { email, password } = dto
+      // Get the user by email
+      const user = await this.authModel.findOne({
+        email: dto.email
+      })
 
-      // Get user by email
-      const userByEmail = await this.authModel.findOne({ email: email})
-
-      if(!userByEmail){
-        throw new ForbiddenException('User Email does not exist')
+      // Check if user exists
+      if(!user){
+        throw new ForbiddenException('User does not exist')
       }
 
-      // If user email is found compare the password
-      const confirmPasswords = await argon.verify(password, dto.password)
+      // If user exists compare the passwords
+      const confirmPassword = await argon.verify(user.password, dto.password)
 
-      if(!confirmPasswords){
-        throw new ForbiddenException("Password does not Match")
+      // Check if password matches
+      if(!confirmPassword){
+        throw new ForbiddenException("Password does not match")
       }
-      // Access Token
+
+      // Assign token
+      const token = this.jwtService.sign({ id: user._id, email: user.email })
+
+      return{ token }
+
+
     } catch (error) {
-      return error
+      console.log(error)
     }
 
-    return await this.authModel.findOne({
-      email: dto.email
-    })
   }
   
 }
