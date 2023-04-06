@@ -18,9 +18,9 @@ export class createPostDto{
 
     @ApiProperty()
     @IsArray()
-    comments: [object]
+    comments?: [string]
 
     @ApiProperty()
     @IsArray()
-    likes: [object]
+    likes?: [string]
 }

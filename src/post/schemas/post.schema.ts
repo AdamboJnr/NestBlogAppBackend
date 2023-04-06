@@ -11,13 +11,13 @@ export class Post{
     content: string
 
     @Prop()
-    image: string
+    image?: string
 
-    @Prop()
-    comments: []
+    @Prop([])
+    comments?: string[]
 
-    @Prop()
-    likes: []
+    @Prop([])
+    likes?: string[]
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post)

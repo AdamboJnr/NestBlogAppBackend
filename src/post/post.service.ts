@@ -6,29 +6,17 @@ import { Post } from './schemas/post.schema';
 
 @Injectable()
 export class PostService {
-    constructor(@InjectModel(Post.name) private postSchema:mongoose.Model<Post>){}
+    constructor(@InjectModel(Post.name) private postSchema: mongoose.Model<Post>){}
     async getAllPosts(){
         const posts = await this.postSchema.find({})
 
         return posts
     }
 
-    async createPost(dto: createPostDto): Promise<{}>{
-        // Get details from user
-        const { title, content, image, comments, likes} = dto
+    async createPost(dto: createPostDto){
+        const { title, content, comments, likes, image } = dto
 
-        console.log(dto);
-        
-
-        const post = await this.postSchema.create({
-            title: title,
-            content: content,
-            image: image,
-            comments: comments,
-            likes: likes
-        })
-
-        console.log(post)
+        const post = await this.postSchema.create(dto)
 
         return post
     }
